@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": true,
+    "useDefineForClassFields": true, // TypeScript의 변환 대상이 ESNext인 경우 기본 true, ECMAScript 표준을 따르도록 하는 설정
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "skipLibCheck": true,
@@ -12,6 +12,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
+    // js로 트랜스파일링 시 추가적으로 별도의 트랜스파일링 (예 : 트랜스파일된 모듈, @babel/plugin-transform-typescript 등)이 안전한지 추가적으로 확인 여부
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
