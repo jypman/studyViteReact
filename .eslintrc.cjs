@@ -9,6 +9,7 @@ module.exports = {
   ],
   overrides: [
   ],
+  ignorePatterns: ['src','.eslintrc.*', 'vite.config.*'],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module'
