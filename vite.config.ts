@@ -4,9 +4,9 @@ import legacy from "@vitejs/plugin-legacy";
 import eslint from "vite-plugin-checker";
 
 // https://vitejs.dev/config/
-export default (conf: { mode: string }) => {
+export default (conf: { mode: string; command: string }) => {
   // .env 파일 읽어오기
-  console.log(loadEnv(conf.mode, process.cwd()));
+  console.log(loadEnv(conf.mode, "./"));
 
   return defineConfig({
     server: {
