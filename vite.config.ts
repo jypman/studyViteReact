@@ -1,13 +1,42 @@
-import { defineConfig, splitVendorChunkPlugin } from "vite";
+import { defineConfig, splitVendorChunkPlugin, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import legacy from "@vitejs/plugin-legacy";
+import eslint from "vite-plugin-checker";
 
 // https://vitejs.dev/config/
-export default (conf) =>
-  defineConfig({
-    esbuild: {
-      jsxInject: `import React from 'react'`, // jsxInject : JSX에 대한 헬퍼를 사용
+export default (conf: { mode: string }) => {
+  // .env 파일 읽어오기
+  console.log(loadEnv(conf.mode, process.cwd()));
+
+  return defineConfig({
+    server: {
+      port: 3000,
+      open: true,
     },
+    preview: {
+      port: 8080,
+      open: true,
+    },
+    build: {
+      outDir: "publish",
+    },
+    // CSS 전처리기로 전달할 옵션을 지정합니다.
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: "$injectedColor: orange;$injectedBgColor: red;",
+        },
+      },
+    },
+
+    // esbuild 옵션 확장
+    esbuild: {
+      jsxInject: `import React from "react"`, // jsxInject : JSX에 대한 헬퍼를 사용
+    },
+
+    // envPrefix로 시작하는 환경 변수는 import.meta.env를 통해 소스 코드에서 접근 가능
+    // envPrefix: "REACT_",
+
     plugins: [
       react(),
 
@@ -22,6 +51,19 @@ export default (conf) =>
       // build.rollupOptions.output.manualChunks를 사용해 청크를 분할할 수 있지만 Vite 2.9부터 manualChunks는 더 이상 기본적으로 수정하지 않는다.
       // 만약 계속 manualChunks를 수정하기 원한다면 splitVendorChunkPlugin을 사용하도록 권장하고 있다.
       splitVendorChunkPlugin(),
+
+      eslint({
+        typescript: {
+          tsconfigPath: "./tsconfig.json",
+        },
+        eslint: {
+          lintCommand: "eslint --cache=true",
+          dev: {
+            logLevel: ["error"],
+          },
+        },
+        overlay: { position: "br" },
+      }),
 
       // vite 전용 훅 공간
       // name의 값은 임의로 변경 가능
@@ -81,3 +123,4 @@ export default (conf) =>
       // },
     ],
   });
+};
